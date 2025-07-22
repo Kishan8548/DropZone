@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "494101789907",
+    "project_id": "lost-and-found-753f9",
+    "storage_bucket": "lost-and-found-753f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494101789907:android:91449be5776f520a75a826",
+        "android_client_info": {
+          "package_name": "com.example.dropzone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARltCKw8QT1xCP9kGeO8JjiFKH8QKAeLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
