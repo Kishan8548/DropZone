@@ -2,6 +2,23 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorPrimary">#ff9282</color>
-    <color name="text_secondary">#8A000000</color>
+
+    <color name="app_primary">#FF9180</color>
+    <color name="app_primary_dark">#FF6F61</color>
+    <color name="app_on_primary">#FFFFFF</color>
+
+    <color name="app_secondary">#FFAB91</color>
+    <color name="app_on_secondary">#FF000000</color>
+
+    <color name="app_background">#FFFBFE</color>
+    <color name="app_surface">#FFFFFF</color>
+    <color name="app_on_surface">#1C1B1F</color>
+    <color name="app_on_surface_variant">#757575</color>
+
+    <color name="status_lost_color">#FF5722</color>
+    <color name="status_found_color">#4CAF50</color>
+    <color name="error_color">#BA1A1A</color>
+    <color name="app_on_error">#FFFFFF</color>
+    <color name="profile_header_bg">#2C3E50</color>
+    <color name="transparent_card_bg">#A0FFFFFF</color>
 </resources>

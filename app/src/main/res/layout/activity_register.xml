@@ -1,183 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context=".WelcomeActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="?attr/android:colorBackground"
+    android:padding="24dp"
+    tools:context=".RegisterActivity">
 
-
-    <ImageView
-        android:id="@+id/topo_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="-220dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/topo_pattern"
-        app:layout_constraintBottom_toTopOf="@id/form_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_top_form"
+    <!-- Title -->
+    <TextView
+        android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.23" />
+        android:text="Sign Up"
+        android:fontFamily="@font/wolfsans"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnBackground"
+        android:layout_marginBottom="24dp" />
 
+    <!-- Email Field -->
+    <EditText
+        android:id="@+id/regEmailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:fontFamily="@font/wolfsans"
+        android:textColor="?attr/colorOnBackground"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:backgroundTint="?attr/colorPrimary"
+        android:layout_marginBottom="16dp" />
 
-    <View
-        android:id="@+id/form_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/form_background_curve"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline_top_form"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/register_panel"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/form_background_curve"
-        android:elevation="2dp"
-        android:padding="24dp"
-        android:layout_marginTop="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_top_form">
-
-        <TextView
-            android:id="@+id/register_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Register"
-            android:textColor="@android:color/black"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/wolfsans"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/reg_email_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:fontFamily="@font/wolfsans"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/register_title" />
-
-        <EditText
-            android:id="@+id/regEmailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="lcs202XXXX@iiitl.ac.in"
-            android:fontFamily="@font/wolfsans"
-            android:inputType="textEmailAddress"
-            android:paddingBottom="12dp"
-            android:paddingTop="8dp"
-            android:backgroundTint="#FF9180"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reg_email_label" />
-
-        <TextView
-            android:id="@+id/reg_password_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:fontFamily="@font/wolfsans"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/regEmailEditText" />
-
+    <!-- Password Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:passwordToggleEnabled="true"
+        app:hintEnabled="false">
         <EditText
             android:id="@+id/regPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="• • • • • • • •"
+            android:hint="Password"
             android:inputType="textPassword"
+            android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:fontFamily="@font/wolfsans"
-            android:paddingTop="8dp"
-            android:backgroundTint="#FF9180"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reg_password_label" />
+            android:textColor="?attr/colorOnBackground"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
+            android:backgroundTint="?attr/colorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/reg_confirm_password_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm Password"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/wolfsans"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/regPasswordEditText" />
-
+    <!-- Confirm Password Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
+        app:hintEnabled="false">
         <EditText
             android:id="@+id/regConfirmPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="• • • • • • • •"
+            android:hint="Confirm Password"
+            android:fontFamily="@font/wolfsans"
             android:inputType="textPassword"
+            android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:paddingTop="8dp"
-            android:fontFamily="@font/wolfsans"
-            android:backgroundTint="#FF9180"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reg_confirm_password_label" />
+            android:textColor="?attr/colorOnBackground"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
+            android:backgroundTint="?attr/colorPrimary" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/registerButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Register"
-            android:textSize="18sp"
-            android:paddingVertical="12dp"
-            android:backgroundTint="#FF9180"
-            android:fontFamily="@font/wolfsans"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/regConfirmPasswordEditText" />
+    <!-- Register Button -->
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:textSize="18sp"
+        android:fontFamily="@font/wolfsans"
+        android:paddingVertical="12dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_marginTop="24dp" />
 
-        <TextView
-            android:id="@+id/backToLoginText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already have an Account? Login"
-            android:textColor="@android:color/darker_gray"
-            android:gravity="center"
-            android:fontFamily="@font/wolfsans"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/registerButton"/>
+    <!-- Back to Login Link -->
+    <TextView
+        android:id="@+id/backToLoginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account? Login"
+        android:fontFamily="@font/wolfsans"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginTop="24dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

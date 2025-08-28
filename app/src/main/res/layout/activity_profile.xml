@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/android:colorBackground"
+    tools:context=".ProfileActivity"> <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appBarLayout"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.DropZone.AppBarOverlay">
+
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="?attr/colorPrimary"
+      app:popupTheme="@style/Theme.DropZone.PopupOverlay"
+      app:title="Profile"
+      app:titleTextColor="?attr/colorOnPrimary" />
+
+</com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:gravity="center_horizontal"
+          android:paddingTop="24dp"
+          android:paddingBottom="16dp"
+          android:background="?attr/colorSurface">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userAvatarImageView"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/ic_account_circle_large"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background_light"
+            android:contentDescription="User Avatar"
+            android:layout_marginBottom="12dp"
+            app:civ_border_color="?attr/colorPrimary"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginBottom="4dp"
+            tools:text="Kishan "/>
+
+        <TextView
+            android:id="@+id/userEmailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:alpha="0.8"
+            android:layout_marginBottom="16dp"
+            tools:text="kishan@example.com"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textColor="?attr/colorOnPrimary"
+            android:backgroundTint="?attr/colorPrimary"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingVertical="12dp"
+            app:cornerRadius="8dp" />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/logoutItem"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginTop="16dp"
+          android:background="?attr/colorSurface"
+          android:paddingHorizontal="16dp"
+          android:paddingVertical="12dp"
+          android:gravity="center_vertical"
+          android:clickable="true"
+          android:focusable="true"
+          android:foreground="?android:attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_logout_black"
+            android:contentDescription="Logout icon"
+            android:layout_marginEnd="16dp"
+            app:tint="?attr/colorOnSurface" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Logout"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_arrow_right_black"
+            android:contentDescription="Arrow icon"
+            app:tint="?attr/colorOnSurfaceVariant" />
+      </LinearLayout>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="My Posts"
+          android:textSize="20sp"
+          android:textStyle="bold"
+          android:textColor="?attr/colorOnSurface"
+          android:layout_marginTop="24dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginBottom="8dp"/>
+
+      <ProgressBar
+          android:id="@+id/profileProgressBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="32dp"
+          android:visibility="gone"
+          tools:visibility="visible" />
+
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/profilePostsRecyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+          android:nestedScrollingEnabled="false"
+          tools:listitem="@layout/item_post"
+          android:paddingTop="8dp"
+          android:clipToPadding="false"
+          tools:itemCount="3" />
+
+    </LinearLayout>
+  </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="app_primary">#FFB69B</color>
+    <color name="app_primary_dark">#8A3319</color>
+    <color name="app_on_primary">#611F00</color>
+
+    <color name="app_secondary">#FFB69B</color>
+    <color name="app_on_secondary">#432A20</color>
+
+    <color name="app_background">#121212</color>
+    <color name="app_surface">#1E1E1E</color>
+    <color name="app_on_surface">#E0E0E0</color>
+    <color name="app_on_surface_variant">#B0B0B0</color>
+
+    <color name="error_color">#FFB4AB</color>
+    <color name="app_on_error">#690005</color>
+
+    <color name="status_lost_color">#FF5722</color>
+    <color name="status_found_color">#4CAF50</color>
+    <color name="profile_header_bg">#2C3E50</color>
+    <color name="transparent_card_bg">#A0FFFFFF</color>
+</resources>

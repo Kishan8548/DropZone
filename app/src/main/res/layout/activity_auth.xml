@@ -1,146 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context=".WelcomeActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="?attr/android:colorBackground"
+    android:padding="24dp"
+    tools:context=".AuthActivity">
 
-
-    <ImageView
-        android:id="@+id/topo_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="-220dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/topo_pattern"
-        app:layout_constraintBottom_toTopOf="@id/form_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_top_form"
+    <!-- Title -->
+    <TextView
+        android:id="@+id/sign_in_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.23" />
+        android:text="Sign In"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/wolfsans"
+        android:textColor="?attr/colorOnBackground"
+        android:layout_marginBottom="24dp" />
 
+    <!-- Email Field -->
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingTop="12dp"
+        android:fontFamily="@font/wolfsans"
+        android:paddingBottom="12dp"
+        android:textColor="?attr/colorOnBackground"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:backgroundTint="?attr/colorPrimary"
+        android:layout_marginBottom="16dp" />
 
-    <View
-        android:id="@+id/form_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/form_background_curve"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline_top_form"
-        app:layout_constraintVertical_bias="0.0" />
+    <!-- Password Field -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingTop="12dp"
+        android:fontFamily="@font/wolfsans"
+        android:paddingBottom="12dp"
+        android:textColor="?attr/colorOnBackground"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:backgroundTint="?attr/colorPrimary" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/login_panel"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/form_background_curve"
-        android:elevation="2dp"
-        android:padding="24dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_top_form"
-        app:layout_constraintVertical_bias="1.0">
-
-        <TextView
-            android:id="@+id/sign_in_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="164dp"
-            android:fontFamily="@font/wolfsans"
-            android:text="Sign in"
-            android:textColor="@android:color/black"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/email_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/wolfsans"
-            android:text="Email"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sign_in_title" />
-
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:backgroundTint="#FF9180"
-            android:fontFamily="@font/wolfsans"
-            android:hint="lcs202XXXX@iiitl.ac.in"
-            android:inputType="textEmailAddress"
-            android:paddingTop="8dp"
-            android:paddingBottom="12dp"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_label" />
-
-        <TextView
-            android:id="@+id/password_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:text="Password"
-            android:fontFamily="@font/wolfsans"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emailEditText" />
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:backgroundTint="#FF9180"
-            android:hint="• • • • • • • •"
-            android:inputType="textPassword"
-            android:paddingTop="8dp"
-            android:fontFamily="@font/wolfsans"
-            android:paddingBottom="12dp"
-            android:textColorHint="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_label" />
+    <!-- Remember Me & Forgot Password -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="24dp">
 
         <CheckBox
             android:id="@+id/rememberMeCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:buttonTint="#FF9180"
             android:text="Remember Me"
             android:fontFamily="@font/wolfsans"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
+            android:buttonTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/forgotPasswordText"
@@ -148,41 +73,33 @@
             android:layout_height="wrap_content"
             android:text="Forgot Password?"
             android:fontFamily="@font/wolfsans"
-            android:textColor="#FF9180"
+            android:textColor="?attr/colorPrimary"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/rememberMeCheckBox"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/rememberMeCheckBox" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
 
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#FF9180"
-            android:paddingVertical="12dp"
-            android:text="Login"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:fontFamily="@font/wolfsans"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rememberMeCheckBox" />
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize="18sp"
+        android:fontFamily="@font/wolfsans"
+        android:paddingVertical="12dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:id="@+id/signUpText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="Don't have An Account? Sign up"
-            android:textColor="@android:color/darker_gray"
-            android:fontFamily="@font/wolfsans"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginButton" />
+    <!-- Sign Up Link -->
+    <TextView
+        android:id="@+id/signUpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account? Sign up"
+        android:fontFamily="@font/wolfsans"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginTop="24dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

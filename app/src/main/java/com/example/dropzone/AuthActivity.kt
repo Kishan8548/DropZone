@@ -1,4 +1,3 @@
-// app/src/main/java/com/yourcompany/dropzone/AuthActivity.kt
 package com.example.dropzone
 
 import android.content.Intent

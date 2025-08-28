@@ -1,9 +1,8 @@
 plugins {
-        id("com.android.application")
-        id("org.jetbrains.kotlin.android")
-        id("com.google.gms.google-services")
-        id("com.google.firebase.crashlytics") // ✅ Use plugin here
-
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -43,17 +42,24 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
-    implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
-    implementation("com.google.firebase:firebase-storage-ktx:21.0.0")
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("androidx.activity:activity-ktx:1.9.0")
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+
+
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
