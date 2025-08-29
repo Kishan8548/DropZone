@@ -31,9 +31,38 @@ Users can update their profile information, such as their name and phone number.
 The app integrates **Firebase Cloud Messaging (FCM)** to send push notification.
 <img src="https://github.com/user-attachments/assets/a572e0c3-46ff-47f9-aac3-6dcbd772542a" alt="Notification" width="300" height="600">
 
+### **8. Animated logo splash screen**
+The splash screen enhances the user experience with a smooth entry animation before navigating to the main app.
 
-### **8. Dark Mode Support**
+### **9. **Donation feature**
+DropZone also includes a donation feature that allows users to contribute via popular UPI-enabled payment apps like **PhonePe, Paytm, and Google Pay**. This is achieved using **Android Intents** to directly open the chosen payment app.  
+
+### **10. Dark Mode Support**
 The app features a dark mode for a better user experience, especially in low-light environments.
 
 ---
 
+## **Tech Stack**
+
+- **MVVM Architecture**
+- **Firebase Authentication**
+- **Firebase Cloud Storage**
+- **Firebase Cloud Firestore**
+- **RecyclerView**
+- **Push Notifications (Google Cloud FCM)**
+- **Glide**
+- **AndroidX Libraries**
+- **CircleImageView**
+- **Splash Screen API**
+- **AnimatedVectorDrawable**
+
+---
+
+## **Demo Video**
+
+
+---
+
+## **Future Scope**
+MessEase is designed with scalability in mind. While currently tailored for IIIT Lucknow, it can be adapted for use by other institutions as well.
+- 
