@@ -13,13 +13,13 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome) // You'll create this layout
+        setContentView(R.layout.activity_welcome)
 
         val continueButton: ImageButton = findViewById(R.id.btn_continue)
         continueButton.setOnClickListener {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
-            finish() // Prevent going back to WelcomeActivity
+            finish()
         }
     }
 }

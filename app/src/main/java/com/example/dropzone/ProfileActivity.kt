@@ -30,12 +30,12 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
-    private lateinit var userAvatarImageView: ImageView // Will be CircleImageView in XML
+    private lateinit var userAvatarImageView: ImageView
     private lateinit var userNameTextView: TextView
     private lateinit var userEmailTextView: TextView
-    private lateinit var editProfileButton: Button // The "Edit Profile" button
+    private lateinit var editProfileButton: Button
 
-    private lateinit var logoutItem: LinearLayout // The LinearLayout for "Logout"
+    private lateinit var logoutItem: LinearLayout
 
     private lateinit var profilePostsRecyclerView: RecyclerView
     private lateinit var profileProgressBar: ProgressBar
@@ -66,13 +66,10 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Profile"
-
-        // Initialize RecyclerView for "My Posts"
         profilePostsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         postAdapter = PostAdapter(emptyList(), this)
         profilePostsRecyclerView.adapter = postAdapter
 
-        // Load current user data
         val currentUser = auth.currentUser
         if (currentUser != null) {
             currentUserId = currentUser.uid
@@ -117,8 +114,6 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             Log.i(TAG, "User logged out successfully.")
             navigateToAuth()
         }
-
-        // Removed: TabLayout listener block entirely, as TabLayout is removed from XML
     }
 
     override fun onSupportNavigateUp(): Boolean {

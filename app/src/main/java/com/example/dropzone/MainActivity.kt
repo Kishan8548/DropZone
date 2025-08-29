@@ -9,8 +9,10 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -40,10 +42,18 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
     private lateinit var chipFound: Chip
 
     private var currentFilter: String = "All"
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition{
+            !viewModel.isReady.value
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()

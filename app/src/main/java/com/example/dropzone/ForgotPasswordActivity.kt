@@ -1,4 +1,3 @@
-// app/src/main/java/com/yourcompany/dropzone/ForgotPasswordActivity.kt
 package com.example.dropzone
 
 import android.os.Bundle
@@ -18,8 +17,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forgot_password) // You'll create this layout
-
+        setContentView(R.layout.activity_forgot_password)
         auth = FirebaseAuth.getInstance()
 
         emailEditText = findViewById(R.id.forgotEmailEditText)
@@ -43,7 +41,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Password reset email sent to $email", Toast.LENGTH_LONG).show()
-                        finish() // Go back to login after sending email
+                        finish()
                     } else {
                         Toast.makeText(this, "Failed to send reset email: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
@@ -51,7 +49,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         }
 
         backToLoginText.setOnClickListener {
-            finish() // Go back to the AuthActivity (Login screen)
+            finish()
         }
     }
 }

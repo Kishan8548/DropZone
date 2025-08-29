@@ -1,6 +1,6 @@
 package com.example.dropzone
 
-import android.app.AlertDialog // Import for AlertDialog
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -61,7 +61,7 @@ class PostDetailActivity : AppCompatActivity() {
         detailPoster = findViewById(R.id.detailPostPoster)
         detailImageView = findViewById(R.id.detailPostImage)
         contactPosterButton = findViewById(R.id.contactPosterButton)
-        deletePostButton = findViewById(R.id.deletePostButton) // Initialize delete button
+        deletePostButton = findViewById(R.id.deletePostButton)
         progressBar = findViewById(R.id.detailProgressBar)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -90,14 +90,13 @@ class PostDetailActivity : AppCompatActivity() {
                 } else if (!post.userName.isNullOrEmpty() &&
                     android.util.Patterns.EMAIL_ADDRESS.matcher(post.userName).matches()) {
                     Log.d(TAG, "Attempting to send email to ${post.userName} for post: ${post.title}")
-                    sendEmailToPoster(post.userName, post.title) // ✅ just call here
+                    sendEmailToPoster(post.userName, post.title)
                 } else {
                     Toast.makeText(this, "Contact information not available.", Toast.LENGTH_SHORT).show()
                     Log.w(TAG, "Contact information not available for post user: ${post.userName}")
                 }
             }
         }
-
 
         deletePostButton.setOnClickListener {
             showDeleteConfirmationDialog()
@@ -109,7 +108,6 @@ class PostDetailActivity : AppCompatActivity() {
         return true
     }
 
-
     private fun fetchPostDetails(postId: String) {
         progressBar.visibility = View.VISIBLE
         firestore.collection("posts").document(postId)
@@ -117,11 +115,10 @@ class PostDetailActivity : AppCompatActivity() {
             .addOnSuccessListener { documentSnapshot ->
                 progressBar.visibility = View.GONE
                 if (documentSnapshot.exists()) {
-                    val post = documentSnapshot.toObject(Post::class.java) // <<< CHANGED: Get object first
-                    post?.id = documentSnapshot.id // <<< ADDED: Manually set ID from document ID
-
+                    val post = documentSnapshot.toObject(Post::class.java)
+                    post?.id = documentSnapshot.id
                     post?.let {
-                        currentPost = it // Store for contact and delete button logic
+                        currentPost = it
                         Log.d(TAG, "Post details fetched successfully: ${it.title}")
                         displayPostDetails(it)
                     } ?: run {
@@ -142,7 +139,6 @@ class PostDetailActivity : AppCompatActivity() {
                 finish()
             }
     }
-
 
     private fun displayPostDetails(post: Post) {
         detailTitle.text = post.title
@@ -178,23 +174,19 @@ class PostDetailActivity : AppCompatActivity() {
             Log.i(TAG, "No image URL for post: ${post.id}. Image view hidden.")
         }
 
-        // Control visibility of Contact and Delete buttons
         auth.currentUser?.let { currentUser ->
             if (currentUser.uid == post.userId) {
-                // It's the owner's post
                 contactPosterButton.visibility = View.GONE
-                deletePostButton.visibility = View.VISIBLE // Show delete button
+                deletePostButton.visibility = View.VISIBLE
                 Log.d(TAG, "Contact button hidden, Delete button visible (owner's post).")
             } else {
-                // It's someone else's post
                 contactPosterButton.visibility = View.VISIBLE
-                deletePostButton.visibility = View.GONE // Hide delete button
+                deletePostButton.visibility = View.GONE
                 Log.d(TAG, "Contact button visible, Delete button hidden (other user's post).")
             }
         } ?: run {
-            // No user logged in
             contactPosterButton.visibility = View.GONE
-            deletePostButton.visibility = View.GONE // Hide delete button
+            deletePostButton.visibility = View.GONE
             Log.d(TAG, "Contact and Delete buttons hidden (user not logged in).")
         }
     }
@@ -212,8 +204,6 @@ class PostDetailActivity : AppCompatActivity() {
             .show()
     }
 
-    // In PostDetailActivity.kt
-
     private fun deletePost() {
         currentPost?.let { post ->
             if (post.id.isEmpty()) {
@@ -222,7 +212,7 @@ class PostDetailActivity : AppCompatActivity() {
                 return
             }
 
-            val loggedInUserUid = auth.currentUser?.uid // Get current user's UID
+            val loggedInUserUid = auth.currentUser?.uid
             Log.d(TAG, "Attempting to delete post: ${post.id}")
             Log.d(TAG, "Logged-in User UID: $loggedInUserUid")
             Log.d(TAG, "Post Owner User ID: ${post.userId}")
@@ -238,7 +228,6 @@ class PostDetailActivity : AppCompatActivity() {
                 return
             }
 
-
             progressBar.visibility = View.VISIBLE
             firestore.collection("posts").document(post.id)
                 .delete()
@@ -250,7 +239,6 @@ class PostDetailActivity : AppCompatActivity() {
                 }
                 .addOnFailureListener { e ->
                     progressBar.visibility = View.GONE
-                    // This specific message comes from Firestore
                     Toast.makeText(this, "Error deleting post: ${e.message}", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Error deleting post ${post.id}: ${e.message}", e)
                 }
@@ -262,10 +250,10 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun sendEmailToPoster(email: String, subject: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "message/rfc822" // email MIME type
+            type = "message/rfc822"
             putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
             putExtra(Intent.EXTRA_SUBJECT, "Regarding your post: $subject")
-            setPackage("com.google.android.gm") // 👈 force Gmail
+            setPackage("com.google.android.gm")
         }
 
         try {

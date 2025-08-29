@@ -1,4 +1,3 @@
-// app/src/main/java/com/yourcompany/dropzone/RegisterActivity.kt
 package com.example.dropzone
 
 import android.content.Intent
@@ -21,7 +20,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register) // You'll create this layout
+        setContentView(R.layout.activity_register)
 
         auth = FirebaseAuth.getInstance()
 
@@ -75,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         backToLoginText.setOnClickListener {
-            finish() // Go back to the AuthActivity (Login screen)
+            finish()
         }
     }
 }

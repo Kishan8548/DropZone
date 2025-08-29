@@ -1,36 +1,34 @@
 package com.example.dropzone
 
 import android.content.Intent
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.enableEdgeToEdge
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
 
-    private val SPLASH_TIME_OUT: Long = 2000 // 2 seconds
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash) // You'll create this layout
+        setContentView(R.layout.activity_splash)
+
+
+        val logo = findViewById<ImageView>(R.id.splash_logo)
+        val animatedDrawable = logo.drawable as? AnimatedVectorDrawable
+        animatedDrawable?.start()
+
 
         Handler(Looper.getMainLooper()).postDelayed({
-            // Check if user is already authenticated
-            val auth = FirebaseAuth.getInstance()
-            if (auth.currentUser != null) {
-                // User is logged in, go to MainActivity directly
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user == null) {
+                startActivity(Intent(this, WelcomeActivity::class.java))
             } else {
-                // User not logged in, go to WelcomeActivity
-                val intent = Intent(this, WelcomeActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, MainActivity::class.java))
             }
-            finish() // Close the splash activity
-        }, SPLASH_TIME_OUT)
+            finish()
+        }, 2000)
     }
 }
