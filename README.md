@@ -1,0 +1,2 @@
+<img width="500" height="500" alt="logo_DropZone" src="https://github.com/user-attachments/assets/8383e75a-d594-4e86-b5b5-b3dd7cf184a6" /><br>
+DropZone is an Android application designed to simplify the process of reporting and recovering lost items. The app helps users post details of lost or found belongings with images, making it easier for the community to reconnect owners with their items efficiently.
