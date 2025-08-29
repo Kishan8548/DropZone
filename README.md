@@ -59,10 +59,11 @@ The app features a dark mode for a better user experience, especially in low-lig
 ---
 
 ## **Demo Video**
-
+[Watch Demo](https://github.com/user-attachments/assets/72aeaf22-e086-4b85-a660-0c3c4e8b8ac6)
 
 ---
 
 ## **Future Scope**
-MessEase is designed with scalability in mind. While currently tailored for IIIT Lucknow, it can be adapted for use by other institutions as well.
-- 
+DropZone is designed with scalability in mind. While currently tailored for IIIT Lucknow, it can be adapted for use by other institutions as well.
+
+----
