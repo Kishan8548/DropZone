@@ -43,6 +43,8 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
     private lateinit var chipFound: Chip
 
     private var currentFilter: String = "All"
+    private var allPosts: List<Post> = emptyList()
+
     private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,18 +86,19 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         chipAll.setOnClickListener {
             currentFilter = "All"
             Log.d(TAG, "Filter changed to: All")
-            fetchPosts()
+            displayPostsByFilter()
         }
         chipLost.setOnClickListener {
             currentFilter = "Lost"
             Log.d(TAG, "Filter changed to: Lost")
-            fetchPosts()
+            displayPostsByFilter()
         }
         chipFound.setOnClickListener {
             currentFilter = "Found"
             Log.d(TAG, "Filter changed to: Found")
-            fetchPosts()
+            displayPostsByFilter()
         }
+        fetchPostsFromFirestore()
     }
 
     override fun onStart() {
@@ -107,24 +110,15 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             startActivity(intent)
             finish()
         } else {
-            // This is the CRITICAL change: call fetchPosts() every time the activity starts.
             Log.d(TAG, "User logged in: ${auth.currentUser?.email}. Re-fetching posts.")
-            fetchPosts()
+//            fetchPosts()
         }
     }
 
-    private fun fetchPosts() {
+    private fun fetchPostsFromFirestore() {
         progressBar.visibility = View.VISIBLE
         val postsCollection = firestore.collection("posts")
-
-        var query: Query = postsCollection.orderBy("timestamp", Query.Direction.DESCENDING)
-
-        when (currentFilter) {
-            "Lost" -> query = query.whereEqualTo("status", "Lost")
-            "Found" -> query = query.whereEqualTo("status", "Found")
-        }
-
-        query.get()
+        postsCollection.orderBy("timestamp", Query.Direction.DESCENDING).get()
             .addOnSuccessListener { querySnapshot ->
                 progressBar.visibility = View.GONE
                 val posts = mutableListOf<Post>()
@@ -133,19 +127,27 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
                     post?.id = document.id
                     post?.let { posts.add(it) }
                 }
-                postAdapter.updatePosts(posts)
-                if (posts.isEmpty()) {
-                    Log.i(TAG, "No posts found for '$currentFilter' filter.")
-                    Toast.makeText(this, "No posts found for '$currentFilter' filter.", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.d(TAG, "Fetched ${posts.size} posts for '$currentFilter' filter.")
-                }
+                allPosts = posts
+                displayPostsByFilter()
+                Log.d(TAG, "Fetched ${posts.size} posts from Firestore.")
             }
             .addOnFailureListener { exception ->
                 progressBar.visibility = View.GONE
                 Log.e(TAG, "Error fetching posts: ${exception.message}", exception)
                 Toast.makeText(this, "Error loading posts: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun displayPostsByFilter() {
+        val filteredList = when (currentFilter) {
+            "Lost" -> allPosts.filter { it.status == "Lost" }
+            "Found" -> allPosts.filter { it.status == "Found" }
+            else -> allPosts
+        }
+        postAdapter.updatePosts(filteredList)
+        if (filteredList.isEmpty()) {
+            Toast.makeText(this, "No posts found for '$currentFilter' filter.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onItemClick(post: Post) {
