@@ -178,16 +178,13 @@ class PostDetailActivity : AppCompatActivity() {
             if (currentUser.uid == post.userId) {
                 contactPosterButton.visibility = View.GONE
                 deletePostButton.visibility = View.VISIBLE
-                Log.d(TAG, "Contact button hidden, Delete button visible (owner's post).")
             } else {
                 contactPosterButton.visibility = View.VISIBLE
                 deletePostButton.visibility = View.GONE
-                Log.d(TAG, "Contact button visible, Delete button hidden (other user's post).")
             }
         } ?: run {
             contactPosterButton.visibility = View.GONE
             deletePostButton.visibility = View.GONE
-            Log.d(TAG, "Contact and Delete buttons hidden (user not logged in).")
         }
     }
 
@@ -206,27 +203,10 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun deletePost() {
         currentPost?.let { post ->
-            if (post.id.isEmpty()) {
-                Toast.makeText(this, "Error: Post ID is missing.", Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "Attempted to delete post with empty ID.")
-                return
-            }
-
             val loggedInUserUid = auth.currentUser?.uid
             Log.d(TAG, "Attempting to delete post: ${post.id}")
             Log.d(TAG, "Logged-in User UID: $loggedInUserUid")
             Log.d(TAG, "Post Owner User ID: ${post.userId}")
-
-            if (loggedInUserUid == null) {
-                Toast.makeText(this, "You must be logged in to delete posts.", Toast.LENGTH_SHORT).show()
-                Log.w(TAG, "Delete denied: User not logged in (UID is null).")
-                return
-            }
-            if (loggedInUserUid != post.userId) {
-                Toast.makeText(this, "You can only delete your own posts.", Toast.LENGTH_SHORT).show()
-                Log.w(TAG, "Delete denied: Logged-in user UID ($loggedInUserUid) does not match post owner UID (${post.userId}).")
-                return
-            }
 
             progressBar.visibility = View.VISIBLE
             firestore.collection("posts").document(post.id)

@@ -10,7 +10,6 @@
     android:padding="24dp"
     tools:context=".WelcomeActivity">
 
-    <!-- App Illustration -->
     <ImageView
         android:id="@+id/welcome_illustration"
         android:layout_width="180dp"
@@ -19,7 +18,6 @@
         android:contentDescription="Abstract welcome illustration"
         android:layout_marginBottom="24dp" />
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tv_welcome_title"
         android:layout_width="wrap_content"
@@ -31,7 +29,6 @@
         android:textColor="?attr/colorOnBackground"
         android:layout_marginBottom="8dp" />
 
-    <!-- Subtitle -->
     <TextView
         android:id="@+id/tv_welcome_subtitle"
         android:layout_width="wrap_content"

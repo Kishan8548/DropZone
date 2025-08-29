@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Support DropZone! Enter the amount to donate:"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter amount (₹)"
+        android:layout_marginHorizontal="50dp"
+        android:inputType="numberDecimal"/>
+
+    <Button
+        android:id="@+id/buttonGPay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:text="Pay via GPay"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/buttonPhonePe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:text="Pay via PhonePe"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/buttonPaytm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:text="Pay via Paytm"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/buttonQR"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="50dp"
+        android:layout_height="wrap_content"
+        android:text="Pay via QR / Other UPI apps"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>

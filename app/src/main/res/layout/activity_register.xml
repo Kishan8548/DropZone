@@ -10,7 +10,6 @@
     android:padding="24dp"
     tools:context=".RegisterActivity">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
@@ -22,7 +21,6 @@
         android:textColor="?attr/colorOnBackground"
         android:layout_marginBottom="24dp" />
 
-    <!-- Email Field -->
     <EditText
         android:id="@+id/regEmailEditText"
         android:layout_width="match_parent"
@@ -37,7 +35,6 @@
         android:backgroundTint="?attr/colorPrimary"
         android:layout_marginBottom="16dp" />
 
-    <!-- Password Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +55,6 @@
             android:backgroundTint="?attr/colorPrimary" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Confirm Password Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -78,7 +74,6 @@
             android:backgroundTint="?attr/colorPrimary" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Register Button -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
@@ -91,7 +86,6 @@
         android:textColor="?attr/colorOnPrimary"
         android:layout_marginTop="24dp" />
 
-    <!-- Back to Login Link -->
     <TextView
         android:id="@+id/backToLoginText"
         android:layout_width="wrap_content"

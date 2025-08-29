@@ -1,6 +1,7 @@
 package com.example.dropzone
 
 import android.content.Intent
+import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -174,6 +175,12 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             R.id.action_profile -> {
                 Log.d(TAG, "Navigating to ProfileActivity.")
                 val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.action_payment -> {
+                Log.d(TAG, "Navigating to PaymentActivity.")
+                val intent = Intent(this, PaymentActivity::class.java)
                 startActivity(intent)
                 true
             }
