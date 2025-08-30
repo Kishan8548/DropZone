@@ -2,24 +2,18 @@ package com.example.dropzone
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log // Ensure this is imported
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout // Import for clickable menu items
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-// Removed: import com.google.android.material.tabs.TabLayout // No longer needed if TabLayout removed from XML
+import com.example.dropzone.adapters.PostAdapter
+import com.example.dropzone.databinding.ActivityProfileBinding
+import com.example.dropzone.models.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.example.dropzone.adapters.PostAdapter
-import com.example.dropzone.models.Post
 
 class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
@@ -27,55 +21,35 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         private const val TAG = "ProfileActivity"
     }
 
+    private lateinit var binding: ActivityProfileBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-
-    private lateinit var userAvatarImageView: ImageView
-    private lateinit var userNameTextView: TextView
-    private lateinit var userEmailTextView: TextView
-    private lateinit var editProfileButton: Button
-
-    private lateinit var logoutItem: LinearLayout
-
-    private lateinit var profilePostsRecyclerView: RecyclerView
-    private lateinit var profileProgressBar: ProgressBar
-
     private lateinit var postAdapter: PostAdapter
 
     private var currentUserId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // Initialize UI Views
-        userAvatarImageView = findViewById(R.id.userAvatarImageView)
-        userNameTextView = findViewById(R.id.userNameTextView)
-        userEmailTextView = findViewById(R.id.userEmailTextView)
-        editProfileButton = findViewById(R.id.editProfileButton)
-
-        logoutItem = findViewById(R.id.logoutItem)
-
-        profilePostsRecyclerView = findViewById(R.id.profilePostsRecyclerView)
-        profileProgressBar = findViewById(R.id.profileProgressBar)
-
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Profile"
-        profilePostsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+
+        binding.profilePostsRecyclerView.layoutManager = LinearLayoutManager(this)
         postAdapter = PostAdapter(emptyList(), this)
-        profilePostsRecyclerView.adapter = postAdapter
+        binding.profilePostsRecyclerView.adapter = postAdapter
 
         val currentUser = auth.currentUser
         if (currentUser != null) {
             currentUserId = currentUser.uid
-            userEmailTextView.text = currentUser.email
+            binding.userEmailTextView.text = currentUser.email
 
-            userNameTextView.text = currentUser.displayName
+            binding.userNameTextView.text = currentUser.displayName
                 ?: currentUser.email?.substringBefore("@")?.replaceFirstChar { it.uppercaseChar() }
                         ?: "DropZone User"
 
@@ -85,12 +59,12 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
                     .load(avatarUrl)
                     .placeholder(R.drawable.ic_account_circle_large)
                     .error(R.drawable.ic_account_circle_large)
-                    .into(userAvatarImageView)
+                    .into(binding.userAvatarImageView)
                 Log.d(TAG, "Loading user avatar from URL: $avatarUrl")
             } else {
                 Glide.with(this)
                     .load(R.drawable.ic_account_circle_large)
-                    .into(userAvatarImageView)
+                    .into(binding.userAvatarImageView)
                 Log.d(TAG, "Using default user avatar (no URL found).")
             }
 
@@ -102,13 +76,12 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             return
         }
 
-        editProfileButton.setOnClickListener {
+        binding.editProfileButton.setOnClickListener {
             Log.d(TAG, "Edit Profile button clicked. Navigating to EditProfileActivity.")
-            val intent = Intent(this, EditProfileActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, EditProfileActivity::class.java))
         }
 
-        logoutItem.setOnClickListener {
+        binding.logoutItem.setOnClickListener {
             auth.signOut()
             Toast.makeText(this, "Logged out successfully.", Toast.LENGTH_SHORT).show()
             Log.i(TAG, "User logged out successfully.")
@@ -124,18 +97,15 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
     private fun fetchUserPosts() {
         currentUserId?.let { userId ->
-            profileProgressBar.visibility = View.VISIBLE
+            binding.profileProgressBar.visibility = View.VISIBLE
             firestore.collection("posts")
                 .whereEqualTo("userId", userId)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-                    profileProgressBar.visibility = View.GONE
-                    val userPosts = mutableListOf<Post>()
-                    for (document in querySnapshot.documents) {
-                        val post = document.toObject(Post::class.java)
-                        post?.id = document.id
-                        post?.let { userPosts.add(it) }
+                    binding.profileProgressBar.visibility = View.GONE
+                    val userPosts = querySnapshot.documents.mapNotNull { doc ->
+                        doc.toObject(Post::class.java)?.apply { id = doc.id }
                     }
                     postAdapter.updatePosts(userPosts)
                     if (userPosts.isEmpty()) {
@@ -146,7 +116,7 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
                     }
                 }
                 .addOnFailureListener { e ->
-                    profileProgressBar.visibility = View.GONE
+                    binding.profileProgressBar.visibility = View.GONE
                     Log.e(TAG, "Error fetching user posts: ${e.message}", e)
                     Toast.makeText(this, "Error loading your posts: ${e.message}", Toast.LENGTH_SHORT).show()
                 }

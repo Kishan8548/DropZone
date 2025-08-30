@@ -6,21 +6,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
+import com.example.dropzone.databinding.ActivityPostDetailBinding
+import com.example.dropzone.models.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.example.dropzone.models.Post
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
+import java.util.*
 
 class PostDetailActivity : AppCompatActivity() {
 
@@ -30,41 +25,19 @@ class PostDetailActivity : AppCompatActivity() {
 
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
-
-    private lateinit var detailTitle: TextView
-    private lateinit var detailDescription: TextView
-    private lateinit var detailCategory: TextView
-    private lateinit var detailLocation: TextView
-    private lateinit var detailStatus: TextView
-    private lateinit var detailTimestamp: TextView
-    private lateinit var detailPoster: TextView
-    private lateinit var detailImageView: ImageView
-    private lateinit var contactPosterButton: Button
-    private lateinit var deletePostButton: Button
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityPostDetailBinding
 
     private var currentPost: Post? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post_detail)
+        binding = ActivityPostDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        detailTitle = findViewById(R.id.detailPostTitle)
-        detailDescription = findViewById(R.id.detailPostDescription)
-        detailCategory = findViewById(R.id.detailPostCategory)
-        detailLocation = findViewById(R.id.detailPostLocation)
-        detailStatus = findViewById(R.id.detailPostStatus)
-        detailTimestamp = findViewById(R.id.detailPostTimestamp)
-        detailPoster = findViewById(R.id.detailPostPoster)
-        detailImageView = findViewById(R.id.detailPostImage)
-        contactPosterButton = findViewById(R.id.contactPosterButton)
-        deletePostButton = findViewById(R.id.deletePostButton)
-        progressBar = findViewById(R.id.detailProgressBar)
-
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Post Details"
@@ -81,7 +54,7 @@ class PostDetailActivity : AppCompatActivity() {
         Log.d(TAG, "Fetching details for post ID: $postId")
         fetchPostDetails(postId)
 
-        contactPosterButton.setOnClickListener {
+        binding.contactPosterButton.setOnClickListener {
             currentPost?.let { post ->
                 val currentUser = auth.currentUser
                 if (currentUser != null && currentUser.uid == post.userId) {
@@ -98,7 +71,7 @@ class PostDetailActivity : AppCompatActivity() {
             }
         }
 
-        deletePostButton.setOnClickListener {
+        binding.deletePostButton.setOnClickListener {
             showDeleteConfirmationDialog()
         }
     }
@@ -109,11 +82,11 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun fetchPostDetails(postId: String) {
-        progressBar.visibility = View.VISIBLE
+        binding.detailProgressBar.visibility = View.VISIBLE
         firestore.collection("posts").document(postId)
             .get()
             .addOnSuccessListener { documentSnapshot ->
-                progressBar.visibility = View.GONE
+                binding.detailProgressBar.visibility = View.GONE
                 if (documentSnapshot.exists()) {
                     val post = documentSnapshot.toObject(Post::class.java)
                     post?.id = documentSnapshot.id
@@ -133,7 +106,7 @@ class PostDetailActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                progressBar.visibility = View.GONE
+                binding.detailProgressBar.visibility = View.GONE
                 Toast.makeText(this, "Error fetching post: ${e.message}", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Error fetching document from Firestore: ${e.message}", e)
                 finish()
@@ -141,23 +114,24 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun displayPostDetails(post: Post) {
-        detailTitle.text = post.title
-        detailDescription.text = post.description
-        detailCategory.text = "Category: ${post.category}"
-        detailLocation.text = "Location: ${post.location ?: "Not specified"}"
-        detailStatus.text = "Status: ${post.status}"
-        detailPoster.text = "Posted by: ${post.userName}"
+        binding.detailPostTitle.text = post.title
+        binding.detailPostDescription.text = post.description
+        binding.detailPostCategory.text = "Category: ${post.category}"
+        binding.detailPostLocation.text = "Location: ${post.location ?: "Not specified"}"
+        binding.detailPostStatus.text = "Status: ${post.status}"
+        binding.detailPostPoster.text = "Posted by: ${post.userName}"
 
         if (post.status == "Lost") {
-            detailStatus.setBackgroundResource(R.drawable.status_lost_background)
+            binding.detailPostStatus.setBackgroundResource(R.drawable.status_lost_background)
         } else {
-            detailStatus.setBackgroundResource(R.drawable.status_found_background)
+            binding.detailPostStatus.setBackgroundResource(R.drawable.status_found_background)
         }
 
         post.timestamp?.let {
-            detailTimestamp.text = "Posted: ${SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a", Locale.getDefault()).format(it)}"
+            binding.detailPostTimestamp.text =
+                "Posted: ${SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a", Locale.getDefault()).format(it)}"
         } ?: run {
-            detailTimestamp.text = "Posted: N/A"
+            binding.detailPostTimestamp.text = "Posted: N/A"
             Log.w(TAG, "Post timestamp is null for post: ${post.id}")
         }
 
@@ -166,25 +140,25 @@ class PostDetailActivity : AppCompatActivity() {
                 .load(post.imageUrl)
                 .placeholder(R.drawable.ic_image_placeholder)
                 .error(R.drawable.ic_image_error)
-                .into(detailImageView)
-            detailImageView.visibility = View.VISIBLE
+                .into(binding.detailPostImage)
+            binding.detailPostImage.visibility = View.VISIBLE
             Log.d(TAG, "Image loaded for post: ${post.id}")
         } else {
-            detailImageView.visibility = View.GONE
+            binding.detailPostImage.visibility = View.GONE
             Log.i(TAG, "No image URL for post: ${post.id}. Image view hidden.")
         }
 
         auth.currentUser?.let { currentUser ->
             if (currentUser.uid == post.userId) {
-                contactPosterButton.visibility = View.GONE
-                deletePostButton.visibility = View.VISIBLE
+                binding.contactPosterButton.visibility = View.GONE
+                binding.deletePostButton.visibility = View.VISIBLE
             } else {
-                contactPosterButton.visibility = View.VISIBLE
-                deletePostButton.visibility = View.GONE
+                binding.contactPosterButton.visibility = View.VISIBLE
+                binding.deletePostButton.visibility = View.GONE
             }
         } ?: run {
-            contactPosterButton.visibility = View.GONE
-            deletePostButton.visibility = View.GONE
+            binding.contactPosterButton.visibility = View.GONE
+            binding.deletePostButton.visibility = View.GONE
         }
     }
 
@@ -192,10 +166,10 @@ class PostDetailActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Delete Post")
             .setMessage("Are you sure you want to delete this post? This action cannot be undone.")
-            .setPositiveButton("Delete") { dialog, which ->
+            .setPositiveButton("Delete") { _, _ ->
                 deletePost()
             }
-            .setNegativeButton("Cancel") { dialog, which ->
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
@@ -208,17 +182,17 @@ class PostDetailActivity : AppCompatActivity() {
             Log.d(TAG, "Logged-in User UID: $loggedInUserUid")
             Log.d(TAG, "Post Owner User ID: ${post.userId}")
 
-            progressBar.visibility = View.VISIBLE
+            binding.detailProgressBar.visibility = View.VISIBLE
             firestore.collection("posts").document(post.id)
                 .delete()
                 .addOnSuccessListener {
-                    progressBar.visibility = View.GONE
+                    binding.detailProgressBar.visibility = View.GONE
                     Toast.makeText(this, "Post deleted successfully!", Toast.LENGTH_SHORT).show()
                     Log.d(TAG, "Post ${post.id} deleted successfully.")
                     finish()
                 }
                 .addOnFailureListener { e ->
-                    progressBar.visibility = View.GONE
+                    binding.detailProgressBar.visibility = View.GONE
                     Toast.makeText(this, "Error deleting post: ${e.message}", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Error deleting post ${post.id}: ${e.message}", e)
                 }
@@ -241,10 +215,5 @@ class PostDetailActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, "Gmail app not found", Toast.LENGTH_SHORT).show()
         }
-    }
-
-
-    private fun formatTimestampDetailed(timestamp: Date): String {
-        return SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a", Locale.getDefault()).format(timestamp)
     }
 }

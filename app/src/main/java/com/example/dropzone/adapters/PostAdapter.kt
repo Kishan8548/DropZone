@@ -1,10 +1,10 @@
 package com.example.dropzone.adapters
+
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dropzone.R
+import com.example.dropzone.databinding.ItemPostBinding
 import com.example.dropzone.models.Post
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -20,14 +20,11 @@ class PostAdapter(
         fun onItemClick(post: Post)
     }
 
-    inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemPostTitle: TextView = itemView.findViewById(R.id.itemPostTitle)
-        val itemPostShortDescription: TextView = itemView.findViewById(R.id.itemPostShortDescription)
-        val itemPostStatus: TextView = itemView.findViewById(R.id.itemPostStatus)
-        val itemPostTime: TextView = itemView.findViewById(R.id.itemPostTime)
+    inner class PostViewHolder(private val binding: ItemPostBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener {
+            binding.root.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     listener.onItemClick(posts[position])
@@ -36,38 +33,40 @@ class PostAdapter(
         }
 
         fun bind(post: Post) {
-            itemPostTitle.text = post.title
-            itemPostShortDescription.text = post.description
+            binding.itemPostTitle.text = post.title
+            binding.itemPostShortDescription.text = post.description
 
-            itemPostStatus.text = post.status
+            binding.itemPostStatus.text = post.status
             if (post.status == "Lost") {
-                itemPostStatus.setBackgroundResource(R.drawable.status_lost_background)
+                binding.itemPostStatus.setBackgroundResource(R.drawable.status_lost_background)
             } else {
-                itemPostStatus.setBackgroundResource(R.drawable.status_found_background)
+                binding.itemPostStatus.setBackgroundResource(R.drawable.status_found_background)
             }
 
             post.timestamp?.let {
-                itemPostTime.text = formatTimestamp(it)
+                binding.itemPostTime.text = formatTimestamp(it)
             } ?: run {
-                itemPostTime.text = ""
+                binding.itemPostTime.text = ""
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
-        return PostViewHolder(view)
+        val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PostViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.bind(posts[position])
     }
+
     override fun getItemCount(): Int = posts.size
 
     fun updatePosts(newPosts: List<Post>) {
         posts = newPosts
         notifyDataSetChanged()
     }
+
     private fun formatTimestamp(timestamp: Date): String {
         val now = Date()
         val diff = now.time - timestamp.time

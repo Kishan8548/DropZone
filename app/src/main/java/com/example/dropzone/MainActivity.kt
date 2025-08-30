@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.example.dropzone.adapters.PostAdapter
+import com.example.dropzone.databinding.ActivityMainBinding
 import com.example.dropzone.models.Post
 
 class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
@@ -33,14 +34,8 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var postsRecyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
-    private lateinit var addPostFab: FloatingActionButton
-    private lateinit var progressBar: ProgressBar
-    private lateinit var filterChipGroup: ChipGroup
-    private lateinit var chipAll: Chip
-    private lateinit var chipLost: Chip
-    private lateinit var chipFound: Chip
+    private lateinit var binding: ActivityMainBinding
 
     private var currentFilter: String = "All"
     private var allPosts: List<Post> = emptyList()
@@ -55,47 +50,39 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
 
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        postsRecyclerView = findViewById(R.id.postsRecyclerView)
-        addPostFab = findViewById(R.id.addPostFab)
-        progressBar = findViewById(R.id.progressBar)
-        filterChipGroup = findViewById(R.id.filterChipGroup)
-        chipAll = findViewById(R.id.chipAll)
-        chipLost = findViewById(R.id.chipLost)
-        chipFound = findViewById(R.id.chipFound)
-
         postAdapter = PostAdapter(emptyList(), this)
-        postsRecyclerView.adapter = postAdapter
-        postsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.postsRecyclerView.apply {
+            adapter = postAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
 
-        addPostFab.setOnClickListener {
+
+        binding.addPostFab.setOnClickListener {
             Log.d(TAG, "FAB clicked. Navigating to AddPostActivity.")
-            val intent = Intent(this, AddPostActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, AddPostActivity::class.java))
         }
 
-        chipAll.setOnClickListener {
+        binding.chipAll.setOnClickListener {
             currentFilter = "All"
-            Log.d(TAG, "Filter changed to: All")
             displayPostsByFilter()
         }
-        chipLost.setOnClickListener {
+        binding.chipLost.setOnClickListener {
             currentFilter = "Lost"
-            Log.d(TAG, "Filter changed to: Lost")
             displayPostsByFilter()
         }
-        chipFound.setOnClickListener {
+        binding.chipFound.setOnClickListener {
             currentFilter = "Found"
-            Log.d(TAG, "Filter changed to: Found")
             displayPostsByFilter()
         }
         fetchPostsFromFirestore()
@@ -116,24 +103,20 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
     }
 
     private fun fetchPostsFromFirestore() {
-        progressBar.visibility = View.VISIBLE
-        val postsCollection = firestore.collection("posts")
-        postsCollection.orderBy("timestamp", Query.Direction.DESCENDING).get()
+        binding.progressBar.visibility = View.VISIBLE
+        firestore.collection("posts")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
             .addOnSuccessListener { querySnapshot ->
-                progressBar.visibility = View.GONE
-                val posts = mutableListOf<Post>()
-                for (document in querySnapshot.documents) {
-                    val post = document.toObject(Post::class.java)
-                    post?.id = document.id
-                    post?.let { posts.add(it) }
+                binding.progressBar.visibility = View.GONE
+                val posts = querySnapshot.documents.mapNotNull { document ->
+                    document.toObject(Post::class.java)?.apply { id = document.id }
                 }
                 allPosts = posts
                 displayPostsByFilter()
-                Log.d(TAG, "Fetched ${posts.size} posts from Firestore.")
             }
             .addOnFailureListener { exception ->
-                progressBar.visibility = View.GONE
-                Log.e(TAG, "Error fetching posts: ${exception.message}", exception)
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(this, "Error loading posts: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
