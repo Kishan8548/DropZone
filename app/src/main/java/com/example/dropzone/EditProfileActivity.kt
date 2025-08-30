@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.example.dropzone.databinding.ActivityEditProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -31,12 +30,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            Glide.with(this)
-                .load(currentUser.photoUrl)
-                .placeholder(R.drawable.ic_account_circle_large)
-                .error(R.drawable.ic_account_circle_large)
-                .into(binding.editProfileImageView)
-
+            binding.editProfileImageView.setImageResource(R.drawable.ic_account_circle_large)
             binding.fullNameEditText.setText(currentUser.displayName)
             binding.emailEditText.setText(currentUser.email)
         } else {
