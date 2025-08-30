@@ -14,6 +14,7 @@ import com.example.dropzone.databinding.ActivityPostDetailBinding
 import com.example.dropzone.models.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -186,9 +187,20 @@ class PostDetailActivity : AppCompatActivity() {
             firestore.collection("posts").document(post.id)
                 .delete()
                 .addOnSuccessListener {
+                    Log.d(TAG, "Post ${post.id} deleted successfully from Firestore.")
+                    post.imageUrl?.let { imageUrl ->
+                        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+                        storageRef.delete()
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Image deleted successfully for post ${post.id}")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e(TAG, "Failed to delete image for post ${post.id}: ${e.message}", e)
+                            }
+                    }
+
                     binding.detailProgressBar.visibility = View.GONE
                     Toast.makeText(this, "Post deleted successfully!", Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, "Post ${post.id} deleted successfully.")
                     finish()
                 }
                 .addOnFailureListener { e ->
