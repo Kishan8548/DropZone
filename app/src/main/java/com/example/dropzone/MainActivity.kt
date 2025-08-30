@@ -49,9 +49,15 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             !viewModel.isReady.value
         }
 
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            fetchPostsFromFirestore()
+        }
+
 
 
 
@@ -109,6 +115,7 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             .get()
             .addOnSuccessListener { querySnapshot ->
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefreshLayout.isRefreshing = false   // stop spinner
                 val posts = querySnapshot.documents.mapNotNull { document ->
                     document.toObject(Post::class.java)?.apply { id = document.id }
                 }
@@ -117,9 +124,11 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             }
             .addOnFailureListener { exception ->
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefreshLayout.isRefreshing = false   // stop spinner
                 Toast.makeText(this, "Error loading posts: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun displayPostsByFilter() {
         val filteredList = when (currentFilter) {
