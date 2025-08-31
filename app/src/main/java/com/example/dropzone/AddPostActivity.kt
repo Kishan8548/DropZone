@@ -2,6 +2,7 @@ package com.example.dropzone
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -22,6 +23,7 @@ import com.example.dropzone.models.Post
 import java.io.ByteArrayOutputStream
 import java.util.UUID
 import android.os.Build
+import android.view.inputmethod.InputMethodManager
 import com.google.android.material.color.MaterialColors
 
 class AddPostActivity : AppCompatActivity() {
@@ -135,9 +137,20 @@ class AddPostActivity : AppCompatActivity() {
 
         createPostButton.setOnClickListener {
             Log.d(TAG, "Create Post button clicked. Attempting to create post.")
+            hideKeyboard(this)
             createPost()
         }
     }
+
+    fun hideKeyboard(activity: Activity) {
+        val view = activity.currentFocus
+        if (view != null) {
+            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
