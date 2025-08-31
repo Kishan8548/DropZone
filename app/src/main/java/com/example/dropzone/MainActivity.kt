@@ -1,7 +1,9 @@
 package com.example.dropzone
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.nfc.Tag
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        checkNotificationPermission()
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             fetchPostsFromFirestore()
@@ -96,6 +99,13 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
             displayPostsByFilter()
         }
         fetchPostsFromFirestore()
+    }
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+            }
+        }
     }
 
     override fun onStart() {
