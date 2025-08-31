@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.dropzone.adapters.PostAdapter
 import com.example.dropzone.databinding.ActivityProfileBinding
 import com.example.dropzone.models.Post
+import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -38,6 +39,11 @@ class ProfileActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val navIcon = binding.toolbar.navigationIcon
+        navIcon?.setTint(
+            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        )
+
         supportActionBar?.title = "Profile"
 
         binding.profilePostsRecyclerView.layoutManager = LinearLayoutManager(this)

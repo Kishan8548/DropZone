@@ -25,6 +25,7 @@ import com.google.firebase.firestore.Query
 import com.example.dropzone.adapters.PostAdapter
 import com.example.dropzone.databinding.ActivityMainBinding
 import com.example.dropzone.models.Post
+import com.google.android.material.color.MaterialColors
 
 class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
@@ -65,6 +66,9 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         firestore = FirebaseFirestore.getInstance()
 
         setSupportActionBar(binding.toolbar)
+        binding.toolbar.overflowIcon?.setTint(
+            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        )
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         postAdapter = PostAdapter(emptyList(), this)

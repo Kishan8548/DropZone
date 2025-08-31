@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dropzone.databinding.ActivityEditProfileBinding
+import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 
@@ -26,6 +27,10 @@ class EditProfileActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val navIcon = binding.toolbar.navigationIcon
+        navIcon?.setTint(
+            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        )
         supportActionBar?.title = "Edit Profile"
 
         val currentUser = auth.currentUser

@@ -22,6 +22,7 @@ import com.example.dropzone.models.Post
 import java.io.ByteArrayOutputStream
 import java.util.UUID
 import android.os.Build
+import com.google.android.material.color.MaterialColors
 
 class AddPostActivity : AppCompatActivity() {
 
@@ -114,6 +115,10 @@ class AddPostActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val navIcon = toolbar.navigationIcon
+        navIcon?.setTint(
+            MaterialColors.getColor(toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        )
         supportActionBar?.title = "New Lost or Found Item"
 
         val categories = arrayOf("Select Category", "ID Card", "Electronics", "Books", "Keys", "Documents", "Accessories", "Others")

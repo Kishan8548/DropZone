@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.example.dropzone.databinding.ActivityPostDetailBinding
 import com.example.dropzone.models.Post
+import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -41,6 +42,10 @@ class PostDetailActivity : AppCompatActivity() {
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val navIcon = binding.toolbar.navigationIcon
+        navIcon?.setTint(
+            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        )
         supportActionBar?.title = "Post Details"
 
         val postId = intent.getStringExtra("postId")
