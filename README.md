@@ -44,7 +44,6 @@ The app features a dark mode for a better user experience, especially in low-lig
 
 ## **Tech Stack**
 
-- **MVVM Architecture**
 - **Firebase Authentication**
 - **Firebase Cloud Storage**
 - **Firebase Cloud Firestore**
