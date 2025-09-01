@@ -28,6 +28,7 @@ import com.example.dropzone.adapters.PostAdapter
 import com.example.dropzone.databinding.ActivityMainBinding
 import com.example.dropzone.models.Post
 import com.google.android.material.color.MaterialColors
+import com.google.firebase.functions.FirebaseFunctions
 
 class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var postAdapter: PostAdapter
     private lateinit var binding: ActivityMainBinding
+    private val functions = FirebaseFunctions.getInstance()
+
 
     private var currentFilter: String = "All"
     private var allPosts: List<Post> = emptyList()
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         }
         fetchPostsFromFirestore()
     }
+
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -190,6 +194,9 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
                 Log.d(TAG, "Navigating to PaymentActivity.")
                 val intent = Intent(this, PaymentActivity::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.action_search -> {
                 true
             }
             else -> super.onOptionsItemSelected(item)
