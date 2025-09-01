@@ -67,6 +67,9 @@ dependencies {
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 
+//    implementation("com.google.ai.generativelanguage:generative-language:0.2.1")
+    implementation("com.google.firebase:firebase-functions:20.4.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
