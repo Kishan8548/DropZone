@@ -13,7 +13,20 @@
           "package_name": "com.example.dropzone"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "494101789907-na31jii3gmi86uk2o17sj5g4ibg2s95l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dropzone",
+            "certificate_hash": "4002394cc29b0023f79f80629a5b3d981ef98815"
+          }
+        },
+        {
+          "client_id": "494101789907-268etf831c7m7i5a70vvdl8oanccu8v0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyARltCKw8QT1xCP9kGeO8JjiFKH8QKAeLM"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494101789907-268etf831c7m7i5a70vvdl8oanccu8v0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

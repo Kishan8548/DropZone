@@ -29,6 +29,10 @@ import com.example.dropzone.databinding.ActivityMainBinding
 import com.example.dropzone.models.Post
 import com.google.android.material.color.MaterialColors
 import com.google.firebase.functions.FirebaseFunctions
+import androidx.appcompat.widget.SearchView
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
@@ -40,7 +44,7 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var postAdapter: PostAdapter
     private lateinit var binding: ActivityMainBinding
-    private val functions = FirebaseFunctions.getInstance()
+//    private val functions = FirebaseFunctions.getInstance()
 
 
     private var currentFilter: String = "All"
@@ -103,6 +107,7 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         }
         fetchPostsFromFirestore()
     }
+
 
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
@@ -169,6 +174,25 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.queryHint = "Search items..."
+//
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (!query.isNullOrEmpty()) {
+                    searchView.clearFocus()
+//                    Log.d("Search", "User submitted query: $query")
+//                    expandAndSearch(query) // 🔥 search with synonyms
+                }
+                return true
+            }
+//
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                return false
+            }
+        })
         return true
     }
 
@@ -196,9 +220,7 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
                 startActivity(intent)
                 true
             }
-            R.id.action_search -> {
-                true
-            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

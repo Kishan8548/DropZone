@@ -6,7 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.dropzone.databinding.ActivityPaymentBinding
+import com.google.android.material.color.MaterialColors
 
 class PaymentActivity : AppCompatActivity() {
 
@@ -19,6 +21,15 @@ class PaymentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val navIcon = binding.toolbar.navigationIcon
+        navIcon?.setTint(
+            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
+        )
+
 
         binding.buttonGPay.setOnClickListener {
             payViaUpi(binding.editAmount.text.toString(), "com.google.android.apps.nbu.paisa.user")

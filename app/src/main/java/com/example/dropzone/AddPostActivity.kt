@@ -313,7 +313,8 @@ class AddPostActivity : AppCompatActivity() {
             category = category,
             location = location,
             status = status,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            lowerCaseTitle = title.lowercase()
         )
 
         firestore.collection("posts")

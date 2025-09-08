@@ -66,6 +66,10 @@ class PostAdapter(
         posts = newPosts
         notifyDataSetChanged()
     }
+    fun updateData(newPosts: List<Post>) {
+        posts = newPosts
+        notifyDataSetChanged()
+    }
 
     private fun formatTimestamp(timestamp: Date): String {
         val now = Date()

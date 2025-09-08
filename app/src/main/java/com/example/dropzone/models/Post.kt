@@ -15,6 +15,7 @@ data class Post(
     val location: String? = null,
     val status: String = "Lost",
     val imageUrl: String? = null,
+    val lowerCaseTitle: String? = null,
     @ServerTimestamp
     val timestamp: Date? = null
 )

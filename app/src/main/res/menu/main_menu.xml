@@ -7,6 +7,7 @@
         android:title="Search"
         android:icon="@drawable/ic_search"
         app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         />
     <item
         android:id="@+id/action_profile"

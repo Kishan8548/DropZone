@@ -17,10 +17,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "GEMINI_API_KEY",
+            "\"${project.findProperty("GEMINI_API_KEY") ?: ""}\""
+        )
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
+
 
     buildTypes {
         release {
@@ -69,6 +76,11 @@ dependencies {
 
 //    implementation("com.google.ai.generativelanguage:generative-language:0.2.1")
     implementation("com.google.firebase:firebase-functions:20.4.0")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
