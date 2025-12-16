@@ -9,13 +9,19 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.dropzone.adapters.AIMatchAdapter
 import com.example.dropzone.databinding.ActivityPostDetailBinding
+import com.example.dropzone.instance.AIApiClient
+import com.example.dropzone.models.AIMatchRequest
 import com.example.dropzone.models.Post
 import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,6 +42,9 @@ class PostDetailActivity : AppCompatActivity() {
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.aiMatchRecycler.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -49,6 +58,8 @@ class PostDetailActivity : AppCompatActivity() {
         supportActionBar?.title = "Post Details"
 
         val postId = intent.getStringExtra("postId")
+            ?: intent.getStringExtra("POST_ID")
+
 
         if (postId == null) {
             Toast.makeText(this, "Post ID not found.", Toast.LENGTH_SHORT).show()
@@ -126,12 +137,18 @@ class PostDetailActivity : AppCompatActivity() {
         binding.detailPostLocation.text = "Location: ${post.location ?: "Not specified"}"
         binding.detailPostStatus.text = "Status: ${post.status}"
         binding.detailPostPoster.text = "Posted by: ${post.userName}"
-
-        if (post.status == "Lost") {
-            binding.detailPostStatus.setBackgroundResource(R.drawable.status_lost_background)
+        if (post.status == "LOST") {
+            maybeShowAIMatches(post)
         } else {
-            binding.detailPostStatus.setBackgroundResource(R.drawable.status_found_background)
+            binding.aiMatchCard.visibility = View.GONE
         }
+
+        if (post.status.equals("Lost", ignoreCase = true)) {
+            maybeShowAIMatches(post)
+        } else {
+            binding.aiMatchCard.visibility = View.GONE
+        }
+
 
         post.timestamp?.let {
             binding.detailPostTimestamp.text =
@@ -141,17 +158,18 @@ class PostDetailActivity : AppCompatActivity() {
             Log.w(TAG, "Post timestamp is null for post: ${post.id}")
         }
 
-        if (!post.imageUrl.isNullOrEmpty()) {
-            Glide.with(this)
-                .load(post.imageUrl)
-                .placeholder(R.drawable.ic_image_placeholder)
-                .error(R.drawable.ic_image_error)
-                .into(binding.detailPostImage)
-            binding.detailPostImage.visibility = View.VISIBLE
-            Log.d(TAG, "Image loaded for post: ${post.id}")
+        Glide.with(this)
+            .load(post.imageUrl)
+            .placeholder(R.drawable.ic_image_placeholder) // demo image
+            .error(R.drawable.ic_image_placeholder)       // when URL is null/invalid
+            .into(binding.detailPostImage)
+
+        binding.detailPostImage.visibility = View.VISIBLE
+
+        if (post.imageUrl.isNullOrEmpty()) {
+            Log.i(TAG, "No image URL for post: ${post.id}. Showing placeholder.")
         } else {
-            binding.detailPostImage.visibility = View.GONE
-            Log.i(TAG, "No image URL for post: ${post.id}. Image view hidden.")
+            Log.d(TAG, "Image loaded for post: ${post.id}")
         }
 
         auth.currentUser?.let { currentUser ->
@@ -167,6 +185,91 @@ class PostDetailActivity : AppCompatActivity() {
             binding.deletePostButton.visibility = View.GONE
         }
     }
+    private fun maybeShowAIMatches(post: Post) {
+        val currentUser = auth.currentUser ?: return
+
+        val isLostPost = post.status.equals("Lost", ignoreCase = true)
+        val isOwner = post.userId == currentUser.uid
+
+        if (isLostPost && isOwner) {
+            binding.aiMatchCard.visibility = View.VISIBLE
+            fetchAIMatches(post)
+        } else {
+            binding.aiMatchCard.visibility = View.GONE
+        }
+    }
+    private fun fetchAIMatches(post: Post) {
+        binding.aiMatchProgress.visibility = View.VISIBLE
+
+        firestore.collection("posts")
+            .whereEqualTo("status", "Found")
+            .get()
+            .addOnSuccessListener { snapshot ->
+
+                val foundItems = snapshot.documents.mapNotNull { doc ->
+                    val desc = doc.getString("description")
+                    if (desc != null) {
+                        mapOf(
+                            "postId" to doc.id,
+                            "description" to desc
+                        )
+                    } else null
+                }
+
+                if (foundItems.isEmpty()) {
+                    binding.aiMatchProgress.visibility = View.GONE
+                    return@addOnSuccessListener
+                }
+
+                callAIMatchingAPI(post.description, foundItems)
+            }
+            .addOnFailureListener {
+                binding.aiMatchProgress.visibility = View.GONE
+            }
+    }
+
+    private fun callAIMatchingAPI(
+        lostDescription: String,
+        foundItems: List<Map<String, String>>
+    ) {
+        lifecycleScope.launch {
+            try {
+                val response = AIApiClient.api.getMatches(
+                    AIMatchRequest(
+                        lost_text = lostDescription,
+                        found_items = foundItems
+                    )
+                )
+
+                binding.aiMatchProgress.visibility = View.GONE
+
+                if (response.isNotEmpty()) {
+
+                    val adapter = AIMatchAdapter(response) { match ->
+
+                        val intent = Intent(this@PostDetailActivity, PostDetailActivity::class.java)
+                        intent.putExtra("POST_ID", match.postId)
+                        intent.putExtra("POST_TYPE", "FOUND")
+                        startActivity(intent)
+                    }
+
+                    binding.aiMatchRecycler.adapter = adapter
+                    binding.aiMatchRecycler.visibility = View.VISIBLE
+                } else {
+                    binding.aiMatchRecycler.visibility = View.GONE
+                }
+
+            } catch (e: Exception) {
+                binding.aiMatchProgress.visibility = View.GONE
+                Log.e(TAG, "AI API failed: ${e.message}", e)
+            }
+        }
+    }
+
+
+
+
+
 
     private fun showDeleteConfirmationDialog() {
         AlertDialog.Builder(this)
