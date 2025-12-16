@@ -120,6 +120,24 @@ The app supports **Dark Mode**, providing a better experience in low-light envir
 
 ---
 
+## ⚠️ Note on AI Suggested Matches Feature
+
+The **AI Suggested Matches** feature requires the AI backend to be running locally.
+
+- The Android app communicates with a **FastAPI-based AI backend**
+- If the backend is not running, the rest of the app will continue to work normally
+- AI suggestions will simply not appear
+
+### To enable AI matching:
+1. Clone the AI backend repository  
+2. Install the required Python dependencies  
+3. Run the FastAPI server locally  
+4. Ensure the backend URL is correctly configured in the Android app
+
+👉 The complete AI backend code is available here:  
+**AI Backend Repository:** https://github.com/Kishan8548/Sentence-Model
+---
+
 ## 🎥 Demo Video
 👉 [Watch Demo](https://github.com/user-attachments/assets/2d6655a4-eb0c-4276-bcd6-c565edceb8df)
 
