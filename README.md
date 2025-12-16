@@ -121,7 +121,8 @@ The app supports **Dark Mode**, providing a better experience in low-light envir
 ---
 
 ## 🎥 Demo Video
-👉 [Watch Demo](https://github.com/user-attachments/assets/72aeaf22-e086-4b85-a660-0c3c4e8b8ac6)
+👉 [Watch Demo](https://github.com/user-attachments/assets/2d6655a4-eb0c-4276-bcd6-c565edceb8df)
+
 
 ---
 
