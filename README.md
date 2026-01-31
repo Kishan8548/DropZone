@@ -26,10 +26,10 @@ The main feed displays all posts and allows users to **filter by status** (Lost 
 
 ### 3️⃣ Post Details Page
 Each post has a dedicated detail screen showing:
-- Item description
-- Location
-- Status
-- Posted time
+- Item description  
+- Location  
+- Status  
+- Posted time  
 - Uploaded image (or a placeholder if no image is provided)
 
 <img src="https://github.com/user-attachments/assets/85232110-a02c-445c-96b2-e69e32e40190" alt="Post Details Page" width="300" height="600">
@@ -43,12 +43,12 @@ For **lost posts created by the owner**, DropZone uses an **AI semantic matching
 - Uses **cosine similarity** to rank matches
 - Clicking a suggestion opens the matched found post directly
 
-This reduces manual searching and significantly improves recovery chances.
+This significantly reduces manual searching and improves recovery chances.
 
 ---
 
 ### 5️⃣ Direct Contact
-Users can directly **contact the post owner via email** to arrange item recovery.
+Users can directly **contact the post owner via email** to coordinate item recovery.
 
 ---
 
@@ -61,32 +61,15 @@ A dedicated profile screen allows users to:
 
 ---
 
-### 7️⃣ Edit Profile
-Users can update personal details such as:
-- Name
-- Phone number
-
----
-
-### 8️⃣ Push Notifications (FCM)
+### 7️⃣ Push Notifications (FCM)
 DropZone integrates **Firebase Cloud Messaging (FCM)** to send push notifications for important updates.
 
 <img src="https://github.com/user-attachments/assets/a572e0c3-46ff-47f9-aac3-6dcbd772542a" alt="Notification" width="300" height="600">
 
 ---
 
-### 9️⃣ Animated Splash Screen
+### 8️⃣ Animated Splash Screen
 A smooth **animated logo splash screen** enhances the first-time user experience using modern Android APIs.
-
----
-
-### 🔟 Donation Feature 💖
-DropZone includes a **donation feature** that allows users to contribute via UPI-enabled apps such as:
-- PhonePe
-- Paytm
-- Google Pay  
-
-This is implemented using **Android Intents** to launch the selected payment app directly.
 
 ---
 
@@ -125,28 +108,26 @@ The app supports **Dark Mode**, providing a better experience in low-light envir
 The **AI Suggested Matches** feature requires the AI backend to be running locally.
 
 - The Android app communicates with a **FastAPI-based AI backend**
-- If the backend is not running, the rest of the app will continue to work normally
+- If the backend is not running, the rest of the app works normally
 - AI suggestions will simply not appear
 
 ### To enable AI matching:
 1. Clone the AI backend repository  
 2. Install the required Python dependencies  
 3. Run the FastAPI server locally  
-4. Ensure the backend URL is correctly configured in the Android app
+4. Ensure the backend URL is correctly configured in the Android app  
 
-👉 The complete AI backend code is available here:  
-**AI Backend Repository:** https://github.com/Kishan8548/Sentence-Model
+👉 **AI Backend Repository:**  
+https://github.com/Kishan8548/Sentence-Model
+
 ---
 
 ## 🎥 Demo Video
-👉 [Watch Demo](https://github.com/user-attachments/assets/2d6655a4-eb0c-4276-bcd6-c565edceb8df)
-
+👉 https://github.com/user-attachments/assets/2d6655a4-eb0c-4276-bcd6-c565edceb8df
 
 ---
 
 ## 🚀 Future Scope
-DropZone is designed with scalability in mind.
-
 Planned improvements include:
 - Expanding support beyond IIIT Lucknow
 - Location-based matching
