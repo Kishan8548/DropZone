@@ -69,6 +69,11 @@ class AddPostActivity : AppCompatActivity() {
         val publicId: String?
     )
 
+    private data class RankedPost(
+        val post: Post,
+        val score: Int
+    )
+
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -325,18 +330,22 @@ class AddPostActivity : AppCompatActivity() {
                 val foundPosts = querySnapshot.documents.mapNotNull { document ->
                     document.toObject(Post::class.java)?.apply { id = document.id }
                 }
-                val shortlistedPosts = shortlistCandidatePosts(draft, foundPosts)
-                if (shortlistedPosts.isEmpty()) {
+                if (foundPosts.isEmpty()) {
                     uploadImageAndSavePost(draft)
                     return@addOnSuccessListener
                 }
 
                 if (BuildConfig.GEMINI_API_KEY.isBlank()) {
-                    showSimilarPostsDialog(shortlistedPosts, draft)
+                    val fallbackMatches = findMatchingPosts(draft, foundPosts, emptyList())
+                    if (fallbackMatches.isNotEmpty()) {
+                        showSimilarPostsDialog(fallbackMatches, draft)
+                    } else {
+                        uploadImageAndSavePost(draft)
+                    }
                     return@addOnSuccessListener
                 }
 
-                requestGeminiSuggestions(draft, shortlistedPosts)
+                requestGeminiRelatedTerms(draft, foundPosts)
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Failed to fetch found posts for suggestion check.", e)
@@ -344,8 +353,8 @@ class AddPostActivity : AppCompatActivity() {
             }
     }
 
-    private fun requestGeminiSuggestions(draft: PendingPostDraft, candidatePosts: List<Post>) {
-        val prompt = buildGeminiPrompt(draft, candidatePosts)
+    private fun requestGeminiRelatedTerms(draft: PendingPostDraft, foundPosts: List<Post>) {
+        val prompt = buildGeminiTermsPrompt(draft)
         val request = GeminiRequest(
             contents = listOf(
                 GeminiRequest.Content(
@@ -360,8 +369,13 @@ class AddPostActivity : AppCompatActivity() {
                 response: Response<com.example.dropzone.models.GeminiResponse>
             ) {
                 if (!response.isSuccessful) {
-                    Log.w(TAG, "Gemini suggestion call failed with code ${response.code()}")
-                    showSimilarPostsDialog(candidatePosts, draft)
+                    Log.w(TAG, "Gemini term generation failed with code ${response.code()}")
+                    val fallbackMatches = findMatchingPosts(draft, foundPosts, emptyList())
+                    if (fallbackMatches.isNotEmpty()) {
+                        showSimilarPostsDialog(fallbackMatches, draft)
+                    } else {
+                        uploadImageAndSavePost(draft)
+                    }
                     return
                 }
 
@@ -373,7 +387,8 @@ class AddPostActivity : AppCompatActivity() {
                     ?.joinToString("\n") { it.text.orEmpty() }
                     .orEmpty()
 
-                val matchedPosts = parseSuggestedPosts(rawText, candidatePosts)
+                val generatedTerms = parseGeminiTerms(rawText)
+                val matchedPosts = findMatchingPosts(draft, foundPosts, generatedTerms)
                 if (matchedPosts.isNotEmpty()) {
                     showSimilarPostsDialog(matchedPosts, draft)
                 } else {
@@ -382,8 +397,13 @@ class AddPostActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<com.example.dropzone.models.GeminiResponse>, t: Throwable) {
-                Log.e(TAG, "Gemini suggestion request failed.", t)
-                showSimilarPostsDialog(candidatePosts, draft)
+                Log.e(TAG, "Gemini term generation request failed.", t)
+                val fallbackMatches = findMatchingPosts(draft, foundPosts, emptyList())
+                if (fallbackMatches.isNotEmpty()) {
+                    showSimilarPostsDialog(fallbackMatches, draft)
+                } else {
+                    uploadImageAndSavePost(draft)
+                }
             }
         })
     }
@@ -558,20 +578,53 @@ class AddPostActivity : AppCompatActivity() {
         return "https://res.cloudinary.com/${BuildConfig.CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/$publicId$formatSuffix"
     }
 
-    private fun shortlistCandidatePosts(draft: PendingPostDraft, foundPosts: List<Post>): List<Post> {
+    private fun findMatchingPosts(
+        draft: PendingPostDraft,
+        foundPosts: List<Post>,
+        generatedTerms: List<String>
+    ): List<Post> {
         return foundPosts
-            .filter { it.category.equals(draft.category, ignoreCase = true) }
-            .map { post -> post to keywordOverlapScore(draft, post) }
-            .filter { (_, score) -> score > 0 }
-            .sortedByDescending { (_, score) -> score }
+            .map { post -> RankedPost(post, scoreFoundPostMatch(draft, post, generatedTerms)) }
+            .filter { it.score >= 3 }
+            .sortedByDescending { it.score }
             .take(MAX_CANDIDATE_POSTS)
-            .map { (post, _) -> post }
+            .map { it.post }
     }
 
-    private fun keywordOverlapScore(draft: PendingPostDraft, post: Post): Int {
-        val draftTokens = tokenize("${draft.title} ${draft.description} ${draft.location.orEmpty()}")
-        val postTokens = tokenize("${post.title} ${post.description} ${post.location.orEmpty()}")
-        return draftTokens.intersect(postTokens).size
+    private fun scoreFoundPostMatch(
+        draft: PendingPostDraft,
+        post: Post,
+        generatedTerms: List<String>
+    ): Int {
+        val postTitleTokens = tokenize(post.title)
+        val postDescriptionTokens = tokenize(post.description)
+        val postText = "${post.title} ${post.description}".lowercase(Locale.getDefault())
+
+        val originalTitleTokens = tokenize(draft.title)
+        val originalDescriptionTokens = tokenize(draft.description)
+        val relatedTokens = generatedTerms
+            .flatMap { tokenize(it).toList() }
+            .toSet()
+        val relatedPhrases = generatedTerms
+            .map { it.trim().lowercase(Locale.getDefault()) }
+            .filter { it.contains(" ") && it.length > 3 }
+            .toSet()
+
+        var score = 0
+
+        score += originalTitleTokens.intersect(postTitleTokens).size * 4
+        score += originalTitleTokens.intersect(postDescriptionTokens).size * 3
+        score += originalDescriptionTokens.intersect(postTitleTokens).size * 3
+        score += originalDescriptionTokens.intersect(postDescriptionTokens).size * 2
+        score += relatedTokens.intersect(postTitleTokens).size * 2
+        score += relatedTokens.intersect(postDescriptionTokens).size
+        score += relatedPhrases.count { phrase -> postText.contains(phrase) } * 3
+
+        if (post.category.equals(draft.category, ignoreCase = true)) {
+            score += 2
+        }
+
+        return score
     }
 
     private fun tokenize(text: String): Set<String> {
@@ -581,48 +634,41 @@ class AddPostActivity : AppCompatActivity() {
             .toSet()
     }
 
-    private fun buildGeminiPrompt(draft: PendingPostDraft, candidatePosts: List<Post>): String {
-        val candidatesBlock = candidatePosts.joinToString("\n\n") { post ->
-            """
-            id: ${post.id}
-            title: ${post.title}
-            description: ${post.description}
-            category: ${post.category}
-            location: ${post.location ?: "Unknown"}
-            """.trimIndent()
-        }
-
+    private fun buildGeminiTermsPrompt(draft: PendingPostDraft): String {
         return """
-            You match a new lost-item report against found-item posts.
-            Return only a JSON array of up to 3 post IDs from the candidates that are likely to describe the same item.
-            Return [] if there is no strong match.
+            Generate 10 to 15 short search terms, synonyms, alternate names, and related descriptive phrases
+            for this lost item based only on its title and description.
+            Use words and short phrases that could appear in a found-post title or description.
+            Return only a JSON array of strings and nothing else.
 
-            Lost item:
+            Item title:
             title: ${draft.title}
-            description: ${draft.description}
-            category: ${draft.category}
-            location: ${draft.location ?: "Unknown"}
 
-            Candidate found posts:
-            $candidatesBlock
+            Item description:
+            description: ${draft.description}
         """.trimIndent()
     }
 
-    private fun parseSuggestedPosts(rawText: String, candidatePosts: List<Post>): List<Post> {
+    private fun parseGeminiTerms(rawText: String): List<String> {
         val cleaned = rawText
             .replace("```json", "")
             .replace("```", "")
             .trim()
-        val arrayMatch = Regex("\\[[\\s\\S]*?\\]").find(cleaned)?.value ?: return emptyList()
 
         return try {
+            val arrayMatch = Regex("\\[[\\s\\S]*?\\]").find(cleaned)?.value ?: cleaned
             val type = object : TypeToken<List<String>>() {}.type
-            val ids: List<String> = Gson().fromJson(arrayMatch, type)
-            val postsById = candidatePosts.associateBy { it.id }
-            ids.mapNotNull { postsById[it] }
+            Gson().fromJson<List<String>>(arrayMatch, type)
+                ?.map { it.trim() }
+                ?.filter { it.length > 2 }
+                ?.distinct()
+                ?: emptyList()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to parse Gemini suggestion response: $rawText", e)
-            emptyList()
+            cleaned
+                .split(",", "\n")
+                .map { it.trim().trim('"') }
+                .filter { it.length > 2 }
+                .distinct()
         }
     }
 
