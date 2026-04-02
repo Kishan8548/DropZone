@@ -1,142 +1,138 @@
 <img width="500" height="500" alt="DropZone Logo" src="https://github.com/user-attachments/assets/8383e75a-d594-4e86-b5b5-b3dd7cf184a6" />
 
-# 📦 DropZone
+# DropZone
 
-**DropZone** is an Android application designed to simplify the process of reporting and recovering lost items.  
-It allows users to post **lost or found belongings** with details and images, helping the community efficiently reconnect owners with their items.
-
-A key highlight of DropZone is its **AI-powered matching system**, which intelligently suggests relevant found items for lost posts using semantic similarity.
+DropZone is an Android app for reporting lost and found items. Users can create posts with item details, browse recent reports, contact the poster by email, and manage their own posts. The app now uses Gemini to suggest similar found posts when someone creates a lost-item post, and uses Cloudinary for image uploads while keeping post details in Firebase Firestore.
 
 ---
 
-## ✨ Features
+## Features
 
-### 1️⃣ Create and Manage Posts
-Users can create posts for **lost or found items**, including a title, detailed description, location, and optional image.  
-Users can also **edit or delete their own posts**.
+### 1. Create lost and found posts
+Users can add a title, description, category, optional location, and optional image for a lost or found item.
 
-<img src="https://github.com/user-attachments/assets/72dd1ecb-d97e-469b-95f8-af68bdab8314" alt="Home Page" width="300" height="600">
+<img src="https://github.com/user-attachments/assets/72dd1ecb-d97e-469b-95f8-af68bdab8314" alt="Create post screen" width="300" height="600">
 
----
+### 2. Gemini-based similar post suggestions
+When a user creates a `Lost` post, the app checks recent `Found` posts with matching category and keywords, then asks Gemini to identify likely matches. If matches are found, the user sees suggested posts before continuing.
 
-### 2️⃣ Filtered Feed
-The main feed displays all posts and allows users to **filter by status** (Lost or Found), making browsing faster and more efficient.
+### 3. Cloudinary image uploads
+Only post images are uploaded to Cloudinary. Post text details such as title, description, category, status, location, and user info remain stored in Firestore. Uploaded images are compressed locally and delivered through Cloudinary optimized URLs.
 
----
+### 4. Firestore-backed post feed
+The home feed loads posts from Firestore in reverse chronological order and supports filtering by `All`, `Lost`, and `Found`.
 
-### 3️⃣ Post Details Page
-Each post has a dedicated detail screen showing:
-- Item description  
-- Location  
-- Status  
-- Posted time  
-- Uploaded image (or a placeholder if no image is provided)
+### 5. Post details and contact
+Each post has a dedicated detail page showing the full item information and image. Users can contact the poster through email.
 
-<img src="https://github.com/user-attachments/assets/85232110-a02c-445c-96b2-e69e32e40190" alt="Post Details Page" width="300" height="600">
+<img src="https://github.com/user-attachments/assets/85232110-a02c-445c-96b2-e69e32e40190" alt="Post details page" width="300" height="600">
 
----
+### 6. Profile and post management
+Users can view their own posts from the profile screen and delete posts they created.
 
-### 4️⃣ AI-Powered Suggested Matches 🤖
-For **lost posts created by the owner**, DropZone uses an **AI semantic matching backend** to suggest relevant **found posts**, even when descriptions differ in wording.
+<img src="https://github.com/user-attachments/assets/7a5ce29d-d97e-43cb-b806-ba3934299d30" alt="Profile page" width="300" height="600">
 
-- Powered by **FastAPI + Sentence Transformers**
-- Uses **cosine similarity** to rank matches
-- Clicking a suggestion opens the matched found post directly
+### 7. Authentication
+The app uses Firebase Authentication for sign-in and account management.
 
-This significantly reduces manual searching and improves recovery chances.
-
----
-
-### 5️⃣ Direct Contact
-Users can directly **contact the post owner via email** to coordinate item recovery.
-
----
-
-### 6️⃣ Profile Page
-A dedicated profile screen allows users to:
-- View all posts they have created
-- Manage their activity in one place
-
-<img src="https://github.com/user-attachments/assets/7a5ce29d-d97e-43cb-b806-ba3934299d30" alt="Profile Page" width="300" height="600">
-
----
-
-### 7️⃣ Push Notifications (FCM)
-DropZone integrates **Firebase Cloud Messaging (FCM)** to send push notifications for important updates.
+### 8. Push notifications
+Firebase Cloud Messaging is integrated for notifications.
 
 <img src="https://github.com/user-attachments/assets/a572e0c3-46ff-47f9-aac3-6dcbd772542a" alt="Notification" width="300" height="600">
 
----
+### 9. Donation feature
+DropZone includes a donation screen that opens UPI-enabled apps such as PhonePe, Paytm, and Google Pay using Android intents.
 
-### 8️⃣ Animated Splash Screen
-A smooth **animated logo splash screen** enhances the first-time user experience using modern Android APIs.
-
----
-
-### 🌙 Dark Mode Support
-The app supports **Dark Mode**, providing a better experience in low-light environments.
+### 10. Splash screen and dark mode
+The app includes an animated splash experience and supports dark mode.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-### Android
 - Kotlin
-- XML Layouts
-- RecyclerView
-- AndroidX Libraries
-- Glide
-- CircleImageView
-- Splash Screen API
-- AnimatedVectorDrawable
-
-### Firebase
+- Android SDK / AndroidX
 - Firebase Authentication
 - Firebase Cloud Firestore
-- Firebase Cloud Storage
-- Firebase Cloud Messaging (FCM)
-
-### AI Backend
-- FastAPI (Python)
-- Sentence Transformers (`all-MiniLM-L6-v2`)
-- Cosine Similarity (scikit-learn)
-
----
-
-## ⚠️ Note on AI Suggested Matches Feature
-
-The **AI Suggested Matches** feature requires the AI backend to be running locally.
-
-- The Android app communicates with a **FastAPI-based AI backend**
-- If the backend is not running, the rest of the app works normally
-- AI suggestions will simply not appear
-
-### To enable AI matching:
-1. Clone the AI backend repository  
-2. Install the required Python dependencies  
-3. Run the FastAPI server locally  
-4. Ensure the backend URL is correctly configured in the Android app  
-
-👉 **AI Backend Repository:**  
-https://github.com/Kishan8548/Sentence-Model
+- Firebase Cloud Messaging
+- Firebase Crashlytics
+- Cloudinary
+- Gemini API
+- Retrofit + Gson
+- Glide
+- RecyclerView
+- CircleImageView
+- Splash Screen API
 
 ---
 
-## 🎥 Demo Video
-👉 https://github.com/user-attachments/assets/2d6655a4-eb0c-4276-bcd6-c565edceb8df
+## Data Storage
+
+- Firestore stores:
+  - post title
+  - description
+  - category
+  - location
+  - status
+  - user details
+  - image URL
+  - Cloudinary image public ID
+- Cloudinary stores:
+  - image files only
+
+Old posts that already contain Firebase Storage image URLs in Firestore will still display correctly because the app loads images from the stored `imageUrl`, regardless of whether that URL points to Firebase Storage or Cloudinary.
 
 ---
 
-## 🚀 Future Scope
-Planned improvements include:
-- Expanding support beyond IIIT Lucknow
-- Location-based matching
-- In-app chat between users
-- Enhanced AI filtering using categories and images
+## Local Setup
+
+1. Clone the repository.
+2. Open the project in Android Studio.
+3. Add the required keys to `local.properties`.
+4. Sync Gradle.
+5. Run the app on an emulator or Android device.
+
+Example `local.properties` entries:
+
+```properties
+sdk.dir=YOUR_ANDROID_SDK_PATH
+GEMINI_API_KEY=your_gemini_api_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_UPLOAD_PRESET=your_unsigned_upload_preset
+```
+
+Notes:
+- `local.properties` is gitignored and should not be committed.
+- The current app upload flow expects an unsigned Cloudinary upload preset.
+- Cloudinary API secrets should not be shipped inside a production Android app.
 
 ---
 
-## 🏁 Conclusion
-DropZone combines **community-driven reporting** with **AI-powered intelligence** to make lost & found recovery faster, smarter, and more reliable.
+## Build
 
-Built for real-world impact.
+To verify the Kotlin source compiles:
+
+```bash
+./gradlew :app:compileDebugKotlin
+```
+
+On Windows:
+
+```powershell
+.\gradlew.bat :app:compileDebugKotlin
+```
+
+---
+
+## Demo Video
+
+[Watch Demo](https://github.com/user-attachments/assets/72aeaf22-e086-4b85-a660-0c3c4e8b8ac6)
+
+---
+
+## Future Improvements
+
+- Migrate old Firebase Storage images to Cloudinary
+- Add secure server-side Cloudinary deletion
+- Improve search and matching beyond category and keyword shortlist
+- Add richer notification workflows for possible matches

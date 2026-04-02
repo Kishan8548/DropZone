@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity(), PostAdapter.OnItemClickListener {
         firestore = FirebaseFirestore.getInstance()
 
         setSupportActionBar(binding.toolbar)
-        binding.toolbar.overflowIcon?.setTint(
-            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
-        )
+//        binding.toolbar.overflowIcon?.setTint(
+//            MaterialColors.getColor(binding.toolbar, com.google.android.material.R.attr.colorOnPrimary)
+//        )
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         postAdapter = PostAdapter(emptyList(), this)

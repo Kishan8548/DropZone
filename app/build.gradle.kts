@@ -1,8 +1,21 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+}
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+fun localProperty(name: String): String {
+    return localProperties.getProperty(name, "")
 }
 
 android {
@@ -20,14 +33,23 @@ android {
         buildConfigField(
             "String",
             "GEMINI_API_KEY",
-            "\"${project.findProperty("GEMINI_API_KEY") ?: ""}\""
+            "\"${localProperty("GEMINI_API_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "CLOUDINARY_CLOUD_NAME",
+            "\"${localProperty("CLOUDINARY_CLOUD_NAME")}\""
+        )
+        buildConfigField(
+            "String",
+            "CLOUDINARY_UPLOAD_PRESET",
+            "\"${localProperty("CLOUDINARY_UPLOAD_PRESET")}\""
         )
     }
     buildFeatures {
         viewBinding = true
         buildConfig = true
     }
-
 
     buildTypes {
         release {
@@ -54,13 +76,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.activity:activity-ktx:1.9.0")
 
-
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-
 
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
 
@@ -69,12 +88,8 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     implementation("de.hdodenhof:circleimageview:3.1.0")
-
     implementation("androidx.core:core-splashscreen:1.0.1")
-
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
-
-//    implementation("com.google.ai.generativelanguage:generative-language:0.2.1")
     implementation("com.google.firebase:firebase-functions:20.4.0")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -85,6 +100,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

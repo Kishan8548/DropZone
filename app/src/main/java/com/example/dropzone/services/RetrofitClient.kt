@@ -1,7 +1,6 @@
 package com.example.dropzone.services
 
-//import com.example.dropzone.BuildConfig
-import com.google.android.datatransport.BuildConfig
+import com.example.dropzone.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,8 +10,12 @@ object RetrofitClient {
 
     private val client = OkHttpClient.Builder()
         .addInterceptor { chain ->
-            val request = chain.request().newBuilder()
-//                .addHeader("Authorization", "Bearer ${BuildConfig.GEMINI_API_KEY}")
+            val originalRequest = chain.request()
+            val updatedUrl = originalRequest.url().newBuilder()
+                .addQueryParameter("key", BuildConfig.GEMINI_API_KEY)
+                .build()
+            val request = originalRequest.newBuilder()
+                .url(updatedUrl)
                 .build()
             chain.proceed(request)
         }
